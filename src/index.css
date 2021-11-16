@@ -48,6 +48,7 @@ body .authent {
   bottom: 0;
   height: 70px;
   opacity: 0;
+  transition: ease 0.6s;
 }
 body .authent p {
   text-align: center;

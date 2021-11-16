@@ -2,7 +2,14 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [data, setData] = useState({ email: "", password: "" });
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+    submitting: false,
+    success: false,
+    submitted: false,
+    verifying: false,
+  });
   const [focus, setFocus] = useState({ email: false, password: false });
   const [validation, setValidation] = useState({
     email: false,
@@ -38,11 +45,27 @@ function App() {
           <img src="/cc-logo.png" alt="" />
         </a>
       </div>
-      <div className="login">
-        <div className="login_title">
+      <div
+        className={`login ${
+          data.submitting
+            ? data.verifying
+              ? "test testtwo"
+              : data.submitted
+              ? "test"
+              : "test"
+            : ""
+        }`}
+      >
+        <div
+          className="login_title"
+          style={{ display: data.success ? "none" : "block" }}
+        >
           <span>Login to your account</span>
         </div>
-        <div className="login_fields">
+        <div
+          className="login_fields"
+          style={{ display: data.success ? "none" : "block" }}
+        >
           <div className="login_fields__user">
             <div
               className="icon"
@@ -122,23 +145,72 @@ function App() {
             </div>
           </div>
           <div className="login_fields__submit">
-            <input type="submit" value="Log In" />
+            <input
+              type="submit"
+              value="Log In"
+              onClick={() => {
+                setData((oldValues) => {
+                  return { ...oldValues, submitting: true };
+                });
+                setTimeout(() => {
+                  setData((oldValues) => {
+                    return { ...oldValues, submitting: true, verifying: true };
+                  });
+                }, [300]);
+                setTimeout(() => {
+                  setData((oldValues) => {
+                    return {
+                      ...oldValues,
+                      submitting: true,
+                      verifying: false,
+                      submitted: true,
+                    };
+                  });
+                }, [3000]);
+                setTimeout(() => {
+                  setData((oldValues) => {
+                    return {
+                      ...oldValues,
+                      submitting: false,
+                      verifying: false,
+                      submitted: true,
+                      success: true,
+                    };
+                  });
+                }, [3500]);
+              }}
+            />
             <div className="forgot">
               <a href="/">Forgotten password?</a>
             </div>
           </div>
         </div>
-        <div className="success">
+        <div
+          className="success"
+          style={{ display: data.success ? "block" : "none" }}
+        >
           <h2>Authentication Success</h2>
           <p>Welcome back</p>
         </div>
-        <div className="disclaimer">
+        <div
+          className="disclaimer"
+          style={{ display: data.success ? "none" : "block" }}
+        >
           <p>
             By logging in, you agree to our terms of service and privacy policy
           </p>
         </div>
       </div>
-      <div className="authent">
+      <div
+        className={`authent ${data.submitted ? "visible" : ""}`}
+        style={
+          data.verifying
+            ? { display: "block", right: "-320px", opacity: 1 }
+            : data.submitted
+            ? { display: "block", right: "90px", opacity: 0 }
+            : {}
+        }
+      >
         <img src="/icons/puff.svg" alt="" />
         <p>Authenticating...</p>
       </div>
